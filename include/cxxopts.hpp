@@ -479,6 +479,20 @@ namespace cxxopts
       }
     }
 
+    template <typename R, typename T>
+    R
+    checked_negate(T&& t, const std::string&, std::true_type)
+    {
+      return -t;
+    }
+
+    template <typename R, typename T>
+    T
+    checked_negate(T&&, const std::string& text, std::false_type)
+    {
+      throw argument_incorrect_type(text);
+    }
+
     template <typename T>
     void
     integer_parser(const std::string& text, T& value)
@@ -537,11 +551,14 @@ namespace cxxopts
 
       if (negative)
       {
-        if (!is_signed)
-        {
-          throw argument_incorrect_type(text);
-        }
-        value = -result;
+        value = checked_negate<T>(result,
+          text,
+          std::integral_constant<bool, is_signed>());
+        //if (!is_signed)
+        //{
+        //  throw argument_incorrect_type(text);
+        //}
+        //value = -result;
       }
       else
       {
