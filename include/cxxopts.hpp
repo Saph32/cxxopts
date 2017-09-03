@@ -483,7 +483,10 @@ namespace cxxopts
     R
     checked_negate(T&& t, const std::string&, std::true_type)
     {
-      return -t;
+      // if we got to here, then `t` is a positive number that fits into
+      // `R`. So to avoid MSVC C4146, we first cast it to `R`.
+      // See https://github.com/jarro2783/cxxopts/issues/62 for more details.
+      return -static_cast<R>(t);
     }
 
     template <typename R, typename T>
