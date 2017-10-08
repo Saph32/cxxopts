@@ -994,7 +994,7 @@ namespace cxxopts
 
     inline
     bool
-    consume_positional(std::string a);
+    consume_positional(const std::string& a);
 
     inline
     void
@@ -1332,7 +1332,7 @@ Options::add_to_option(const std::string& option, const std::string& arg)
 }
 
 bool
-Options::consume_positional(std::string a)
+Options::consume_positional(const std::string& a)
 {
   while (m_next_positional != m_positional.end())
   {
